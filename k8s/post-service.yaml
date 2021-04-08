@@ -18,21 +18,21 @@ spec:
           ports:
             - containerPort: 5001
           env:
-            - name: PGHOST
-              value: postgres-cluster-ip-service
-            - name: PGUSER
-              value: postgres
-            - name: POSTGRES_PASSWORD
+            - name: MSSQL-HOST
+              value: mssql-cis
+            - name: MSSQL-USER
+              value: sa
+            - name: MSSQL-PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: pgpassword
-                  key: POSTGRES_PASSWORD
-            - name: PGDATABASE_DEVELOPMENT
-              value: users_development
-            - name: PGDATABASE_TEST
-              value: users_test
-            - name: PGDATABASE_PRODUCTION
-              value: users_production
+                  name: mssql-password
+                  key: SA_PASSWORD
+            - name: DATABASE_DEVELOPMENT
+              value: comment-service-db-development
+            - name: DATABASE_TEST
+              value: comment-service-db-test
+            - name: DATABASE_PRODUCTION
+              value: comment-service-db-production
 ---
 apiVersion: v1
 kind: Service
