@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: post-service-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: post-service-server
+  template:
+    metadata:
+      labels:
+        component: post-service-server
+    spec:
+      containers:
+        - name: post-service
+          image: d0rka/post-service
+          ports:
+            - containerPort: 5001
+          env:
+            - name: PGHOST
+              value: postgres-cluster-ip-service
+            - name: PGUSER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pgpassword
+                  key: POSTGRES_PASSWORD
+            - name: PGDATABASE_DEVELOPMENT
+              value: users_development
+            - name: PGDATABASE_TEST
+              value: users_test
+            - name: PGDATABASE_PRODUCTION
+              value: users_production
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: post-service-cis
+spec:
+  type: ClusterIP
+  selector:
+    component: post-service-server
+  ports:
+    - port: 5001
+      targetPort: 5001

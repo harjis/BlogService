@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mssql-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: mssql
+  template:
+    metadata:
+      labels:
+        component: mssql
+    spec:
+      volumes:
+        - name: mssql-storage
+          persistentVolumeClaim:
+            claimName: blog-db-pvc
+      containers:
+        - name: mssql
+          image: mssql
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: mssql-storage
+              mountPath: /var/lib/mssqlql/data
+              subPath: mssql
+          env:
+            - name: mssql_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pgpassword
+                  key: mssql_PASSWORD
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mssql-cluster-ip-service
+spec:
+  type: ClusterIP
+  selector:
+    component: mssql
+  ports:
+    - port: 5432
+      targetPort: 5432

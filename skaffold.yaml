@@ -1,0 +1,14 @@
+apiVersion: skaffold/v2beta10
+kind: Config
+build:
+  artifacts:
+    - image: d0rka/post-service
+      context: PostService
+      sync:
+        infer:
+          - "**/*"
+    - image: d0rka/comment-service
+      context: CommentService
+      sync:
+        infer:
+          - "**/*"

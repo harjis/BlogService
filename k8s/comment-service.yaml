@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: comment-service-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: comment-service-server
+  template:
+    metadata:
+      labels:
+        component: comment-service-server
+    spec:
+      containers:
+        - name: comment-service
+          image: d0rka/comment-service
+          ports:
+            - containerPort: 5001
+          env:
+            - name: PGHOST
+              value: postgres-cluster-ip-service
+            - name: PGUSER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pgpassword
+                  key: POSTGRES_PASSWORD
+            - name: PGDATABASE_DEVELOPMENT
+              value: users_development
+            - name: PGDATABASE_TEST
+              value: users_test
+            - name: PGDATABASE_PRODUCTION
+              value: users_production
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: comment-service-cis
+spec:
+  type: ClusterIP
+  selector:
+    component: comment-service-server
+  ports:
+    - port: 5001
+      targetPort: 5001

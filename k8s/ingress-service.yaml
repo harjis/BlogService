@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-service
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /posts
+            pathType: Prefix
+            backend:
+              service:
+                name: post-service-cis
+                port:
+                  number: 5001
+          - path: /comments
+            pathType: Prefix
+            backend:
+              service:
+                name: comment-service-cis
+                port:
+                  number: 5001
