@@ -14,11 +14,11 @@ spec:
               service:
                 name: post-service-cis
                 port:
-                  number: 5001
+                  number: 80
           - path: /comments
             pathType: Prefix
             backend:
               service:
                 name: comment-service-cis
                 port:
-                  number: 5001
+                  number: 80

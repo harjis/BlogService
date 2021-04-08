@@ -16,7 +16,7 @@ spec:
         - name: post-service
           image: d0rka/post-service
           ports:
-            - containerPort: 5001
+            - containerPort: 80
           env:
             - name: MSSQL-HOST
               value: mssql-cis
@@ -43,5 +43,5 @@ spec:
   selector:
     component: post-service-server
   ports:
-    - port: 5001
-      targetPort: 5001
+    - port: 80
+      targetPort: 80
