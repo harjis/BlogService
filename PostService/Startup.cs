@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Builder.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
@@ -25,15 +27,39 @@ namespace PostService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<PostDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("Default")));
+            string connectionString;
+            if (Configuration.GetValue<string>("MSSQL-HOST") != null)
+            {
+                var dbHost = Configuration.GetValue<string>("MSSQL-HOST");
+                var dbName = Configuration.GetValue<string>("DATABASE_DEVELOPMENT");
+                var dbUser = Configuration.GetValue<string>("MSSQl-USER");
+                var dbPassword = Configuration.GetValue<string>("MSSQl-PASSWORD");
+                connectionString = $"Data Source={dbHost};Database={dbName};User Id={dbUser};Password={dbPassword};";
+            }
+            else
+            {
+                connectionString =
+                    "Data Source=localhost;Database=post-service-db;User Id=sa;Password=verystrongPassword123;";
+            }
 
+            services.AddDbContext<PostDbContext>(options => options.UseSqlServer(connectionString));
             services.AddControllersWithViews();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, PostDbContext context)
         {
+            // I think this needs to be before all routing related middleware (UseStaticFiles, UseRouting etc.)
+            app.UsePathBase("/posts");
+            
+            // TODO Running migrations on application startup is not what I want but that is the best
+            // I can do for now.
+            if (context.Database.GetPendingMigrations().Any())
+            {
+                Console.WriteLine("Applying migrations...");
+                context.Database.Migrate();
+            }
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -56,7 +82,7 @@ namespace PostService
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Posts}/{action=Index}/{id?}");
             });
         }
     }
