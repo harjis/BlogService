@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostService", "PostService\PostService.csproj", "{E6B28825-2B63-40EB-BC4C-61804E71F052}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommentService", "CommentService\CommentService.csproj", "{D20E1F48-EDB9-4570-BC46-9B3F5B26B143}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{E6B28825-2B63-40EB-BC4C-61804E71F052}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E6B28825-2B63-40EB-BC4C-61804E71F052}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E6B28825-2B63-40EB-BC4C-61804E71F052}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D20E1F48-EDB9-4570-BC46-9B3F5B26B143}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D20E1F48-EDB9-4570-BC46-9B3F5B26B143}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D20E1F48-EDB9-4570-BC46-9B3F5B26B143}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D20E1F48-EDB9-4570-BC46-9B3F5B26B143}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
