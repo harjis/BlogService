@@ -1,0 +1,76 @@
+## ------------------------------------------------------
+## Zookeeper
+## ------------------------------------------------------
+cp-zookeeper:
+  enabled: true
+  servers: 1
+  image: confluentinc/cp-zookeeper
+  imageTag: 6.1.0
+
+## ------------------------------------------------------
+## Kafka
+## ------------------------------------------------------
+cp-kafka:
+  enabled: true
+  brokers: 3
+  image: confluentinc/cp-enterprise-kafka
+  imageTag: 6.1.0
+
+## ------------------------------------------------------
+## Kafka Connect
+## ------------------------------------------------------
+cp-kafka-connect:
+  enabled: true
+  image: debezium/connect
+  imageTag: 1.5
+  ## Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace.
+  ## https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
+  imagePullSecrets:
+  #  - name: "regcred"
+  heapOptions: "-Xms512M -Xmx512M"
+  resources: { }
+  ## If you do want to specify resources, uncomment the following lines, adjust them as necessary,
+  ## and remove the curly braces after 'resources:'
+  #  limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  #  requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+  configurationOverrides:
+    topic.creation.default.replication.factor: 1
+    key.converter.schemas.enable: true
+    key.converter: io.confluent.connect.avro.AvroConverter
+    key.converter.schema.registry.url: http://my-kafka-cp-schema-registry:8081
+    value.converter.schemas.enable: true
+    value.converter: io.confluent.connect.avro.AvroConverter
+    value.converter.schema.registry.url: http://my-kafka-cp-schema-registry:8081
+  customEnv:
+    CONNECT_PLUGIN_PATH: /usr/share/java,/usr/share/confluent-hub-components,/kafka/connect,/kafka/libs
+    CONFIG_STORAGE_TOPIC: my_connect_configs
+    OFFSET_STORAGE_TOPIC: my_connect_offsets
+    STATUS_STORAGE_TOPIC: my_source_connect_statuses
+
+## ------------------------------------------------------
+## Schema Registry
+## ------------------------------------------------------
+cp-schema-registry:
+  enabled: false
+
+## ------------------------------------------------------
+## REST Proxy
+## ------------------------------------------------------
+cp-kafka-rest:
+  enabled: false
+
+## ------------------------------------------------------
+## KSQL Server
+## ------------------------------------------------------
+cp-ksql-server:
+  enabled: false
+
+## ------------------------------------------------------
+## Control Center
+## ------------------------------------------------------
+cp-control-center:
+  enabled: false
