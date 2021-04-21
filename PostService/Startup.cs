@@ -28,21 +28,20 @@ namespace PostService
         public void ConfigureServices(IServiceCollection services)
         {
             string connectionString;
-            if (Configuration.GetValue<string>("MSSQL-HOST") != null)
+            if (Configuration.GetValue<string>("POSTGRES_HOST") != null)
             {
-                var dbHost = Configuration.GetValue<string>("MSSQL-HOST");
-                var dbName = Configuration.GetValue<string>("DATABASE_DEVELOPMENT");
-                var dbUser = Configuration.GetValue<string>("MSSQl-USER");
-                var dbPassword = Configuration.GetValue<string>("MSSQl-PASSWORD");
-                connectionString = $"Data Source={dbHost};Database={dbName};User Id={dbUser};Password={dbPassword};";
+                var dbHost = Configuration.GetValue<string>("POSTGRES_HOST");
+                var dbName = Configuration.GetValue<string>("POSTGRES_DATABASE");
+                var dbUser = Configuration.GetValue<string>("POSTGRES_USERNAME");
+                var dbPassword = Configuration.GetValue<string>("POSTGRES_PASSWORD");
+                connectionString = $"Host={dbHost};Database={dbName};Username={dbUser};Password={dbPassword};";
             }
             else
             {
-                connectionString =
-                    "Data Source=localhost;Database=post-service-db;User Id=sa;Password=verystrongPassword123;";
+                connectionString = $"Host=localhost;Database=post-service-db;Username=postgres;Password=postgres;";
             }
 
-            services.AddDbContext<PostDbContext>(options => options.UseSqlServer(connectionString));
+            services.AddDbContext<PostDbContext>(options => options.UseNpgsql(connectionString));
             services.AddControllersWithViews();
         }
 
@@ -51,7 +50,7 @@ namespace PostService
         {
             // I think this needs to be before all routing related middleware (UseStaticFiles, UseRouting etc.)
             app.UsePathBase("/posts");
-            
+
             // TODO Running migrations on application startup is not what I want but that is the best
             // I can do for now.
             if (context.Database.GetPendingMigrations().Any())

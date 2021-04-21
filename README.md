@@ -4,5 +4,5 @@ You need to have these tools installed:
 
 # Setup
 ```
-kubectl create secret generic mssql-password --from-literal=SA_PASSWORD="verystrongPassword123"
+kubectl create secret generic pgpassword --from-literal POSTGRES_PASSWORD=my_pgpassword
 ```

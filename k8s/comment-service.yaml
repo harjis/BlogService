@@ -18,21 +18,19 @@ spec:
           ports:
             - containerPort: 80
           env:
-            - name: MSSQL-HOST
-              value: mssql-cis
-            - name: MSSQL-USER
-              value: sa
-            - name: MSSQL-PASSWORD
+            - name: POSTGRES_HOST
+              value: postgres-cis
+            - name: POSTGRES_PORT
+              value: '5432'
+            - name: POSTGRES_USERNAME
+              value: postgres
+            - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mssql-password
-                  key: SA_PASSWORD
-            - name: DATABASE_DEVELOPMENT
-              value: comment-service-db-development
-            - name: DATABASE_TEST
-              value: comment-service-db-test
-            - name: DATABASE_PRODUCTION
-              value: comment-service-db-production
+                  name: pgpassword
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_DATABASE
+              value: comments-db
 ---
 apiVersion: v1
 kind: Service

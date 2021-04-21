@@ -26,21 +26,20 @@ namespace CommentService
         public void ConfigureServices(IServiceCollection services)
         {
             string connectionString;
-            if (Configuration.GetValue<string>("MSSQL-HOST") != null)
+            if (Configuration.GetValue<string>("POSTGRES_HOST") != null)
             {
-                var dbHost = Configuration.GetValue<string>("MSSQL-HOST");
-                var dbName = Configuration.GetValue<string>("DATABASE_DEVELOPMENT");
-                var dbUser = Configuration.GetValue<string>("MSSQl-USER");
-                var dbPassword = Configuration.GetValue<string>("MSSQl-PASSWORD");
-                connectionString = $"Data Source={dbHost};Database={dbName};User Id={dbUser};Password={dbPassword};";
+                var dbHost = Configuration.GetValue<string>("POSTGRES_HOST");
+                var dbName = Configuration.GetValue<string>("POSTGRES_DATABASE");
+                var dbUser = Configuration.GetValue<string>("POSTGRES_USERNAME");
+                var dbPassword = Configuration.GetValue<string>("POSTGRES_PASSWORD");
+                connectionString = $"Host={dbHost};Database={dbName};Username={dbUser};Password={dbPassword};";
             }
             else
             {
-                connectionString =
-                    "Data Source=localhost;Database=comment-service-db;User Id=sa;Password=verystrongPassword123;";
+                connectionString = $"Host=localhost;Database=comment-service-db;Username=postgres;Password=postgres;";
             }
 
-            services.AddDbContext<CommentDbContext>(options => options.UseSqlServer(connectionString));
+            services.AddDbContext<CommentDbContext>(options => options.UseNpgsql(connectionString));
             services.AddControllersWithViews();
         }
 
