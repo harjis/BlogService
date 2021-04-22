@@ -43,6 +43,8 @@ namespace PostService
 
             services.AddDbContext<PostDbContext>(options => options.UseNpgsql(connectionString));
             services.AddControllersWithViews();
+            services.AddScoped<PostRepository>();
+            services.AddScoped<UnitOfWork>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

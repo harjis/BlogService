@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PostService.DAL;
 using PostService.Models;
@@ -12,17 +8,17 @@ namespace PostService.Controllers
 {
     public class PostsController : Controller
     {
-        private readonly PostDbContext _context;
+        private readonly UnitOfWork _unitOfWork;
 
-        public PostsController(PostDbContext context)
+        public PostsController(UnitOfWork unitOfWork)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
         }
 
         // GET: Posts
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Posts.ToListAsync());
+            return View(await _unitOfWork.PostRepository.Get());
         }
 
         // GET: Posts/Details/5
@@ -33,8 +29,7 @@ namespace PostService.Controllers
                 return NotFound();
             }
 
-            var post = await _context.Posts
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var post = await _unitOfWork.PostRepository.GetById(id);
             if (post == null)
             {
                 return NotFound();
@@ -58,10 +53,11 @@ namespace PostService.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(post);
-                await _context.SaveChangesAsync();
+                await _unitOfWork.PostRepository.Add(post);
+                await _unitOfWork.Save();
                 return RedirectToAction(nameof(Index));
             }
+
             return View(post);
         }
 
@@ -73,11 +69,12 @@ namespace PostService.Controllers
                 return NotFound();
             }
 
-            var post = await _context.Posts.FindAsync(id);
+            var post = await _unitOfWork.PostRepository.GetById(id);
             if (post == null)
             {
                 return NotFound();
             }
+
             return View(post);
         }
 
@@ -97,12 +94,12 @@ namespace PostService.Controllers
             {
                 try
                 {
-                    _context.Update(post);
-                    await _context.SaveChangesAsync();
+                    _unitOfWork.PostRepository.Update(post);
+                    await _unitOfWork.Save();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PostExists(post.Id))
+                    if (!await PostExists(post.Id))
                     {
                         return NotFound();
                     }
@@ -111,8 +108,10 @@ namespace PostService.Controllers
                         throw;
                     }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
+
             return View(post);
         }
 
@@ -124,8 +123,7 @@ namespace PostService.Controllers
                 return NotFound();
             }
 
-            var post = await _context.Posts
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var post = await _unitOfWork.PostRepository.GetById(id);
             if (post == null)
             {
                 return NotFound();
@@ -139,15 +137,14 @@ namespace PostService.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var post = await _context.Posts.FindAsync(id);
-            _context.Posts.Remove(post);
-            await _context.SaveChangesAsync();
+            _unitOfWork.PostRepository.Delete(id);
+            await _unitOfWork.Save();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PostExists(int id)
+        private async Task<bool> PostExists(int id)
         {
-            return _context.Posts.Any(e => e.Id == id);
+            return await _unitOfWork.PostRepository.Exists(id);
         }
     }
 }
