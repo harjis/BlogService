@@ -9,10 +9,12 @@ namespace PostService.Controllers
     public class PostsController : Controller
     {
         private readonly UnitOfWork _unitOfWork;
+        private readonly Services.PostService _postService;
 
-        public PostsController(UnitOfWork unitOfWork)
+        public PostsController(UnitOfWork unitOfWork, Services.PostService postService)
         {
             _unitOfWork = unitOfWork;
+            _postService = postService;
         }
 
         // GET: Posts
@@ -53,8 +55,7 @@ namespace PostService.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _unitOfWork.PostRepository.Add(post);
-                await _unitOfWork.Save();
+                await _postService.AddPost(post);
                 return RedirectToAction(nameof(Index));
             }
 

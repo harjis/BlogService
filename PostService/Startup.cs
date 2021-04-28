@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PostService.DAL;
+using PostService.Outbox;
 
 namespace PostService
 {
@@ -44,6 +45,8 @@ namespace PostService
             services.AddDbContext<PostDbContext>(options => options.UseNpgsql(connectionString));
             services.AddControllersWithViews();
             services.AddScoped<PostRepository>();
+            services.AddScoped<OutboxManager>();
+            services.AddScoped<Services.PostService>();
             services.AddScoped<UnitOfWork>();
         }
 
