@@ -4,5 +4,5 @@ You need to have these tools installed:
 
 # Setup
 ```
-kubectl create secret generic pgpassword --from-literal POSTGRES_PASSWORD=my_pgpassword
+kubectl create secret generic post-db-password --from-literal postgresql-password=my_pgpassword
 ```

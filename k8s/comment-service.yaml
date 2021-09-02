@@ -19,7 +19,7 @@ spec:
             - containerPort: 80
           env:
             - name: POSTGRES_HOST
-              value: postgres-cis
+              value: postgresql
             - name: POSTGRES_PORT
               value: '5432'
             - name: POSTGRES_USERNAME

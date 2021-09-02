@@ -1,0 +1,16 @@
+global:
+  postgresql:
+    existingSecret: post-db-password
+
+image:
+  repository: debezium/postgres
+  tag: 12
+
+persistence:
+  existingClaim: blog-db-pvc
+
+#postgresqlConfiguration:
+#  listenAddresses: '*'
+#  walLevel: 'logical'
+#  maxWalSenders: 1
+#  maxReplicationSlots: 1

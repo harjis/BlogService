@@ -56,14 +56,6 @@ namespace PostService
             // I think this needs to be before all routing related middleware (UseStaticFiles, UseRouting etc.)
             app.UsePathBase("/posts");
 
-            // TODO Running migrations on application startup is not what I want but that is the best
-            // I can do for now.
-            if (context.Database.GetPendingMigrations().Any())
-            {
-                Console.WriteLine("Applying migrations...");
-                context.Database.Migrate();
-            }
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
