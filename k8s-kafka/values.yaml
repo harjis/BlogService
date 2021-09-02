@@ -27,8 +27,8 @@ cp-kafka:
 ## ------------------------------------------------------
 cp-kafka-connect:
   enabled: true
-  image: debezium/connect
-  imageTag: 1.5
+  image: d0rka/confluent-debezium-outbox-image
+  imageTag: 0.1.1
   ## Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace.
   ## https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
   imagePullSecrets:
@@ -48,17 +48,24 @@ cp-kafka-connect:
       enabled: false
   configurationOverrides:
     topic.creation.default.replication.factor: 1
-    key.converter.schemas.enable: true
-    key.converter: io.confluent.connect.avro.AvroConverter
-    key.converter.schema.registry.url: http://blog-service-kafka-cp-schema-registry:8081
-    value.converter.schemas.enable: true
-    value.converter: io.confluent.connect.avro.AvroConverter
-    value.converter.schema.registry.url: http://blog-service-kafka-cp-schema-registry:8081
+    key.converter.schemas.enable: false
+    key.converter: org.apache.kafka.connect.json.JsonConverter
+    value.converter.schemas.enable: false
+    value.converter: org.apache.kafka.connect.json.JsonConverter
   customEnv:
     CONNECT_PLUGIN_PATH: /usr/share/java,/usr/share/confluent-hub-components,/kafka/connect,/kafka/libs
     CONFIG_STORAGE_TOPIC: my_connect_configs
     OFFSET_STORAGE_TOPIC: my_connect_offsets
     STATUS_STORAGE_TOPIC: my_source_connect_statuses
+    CONNECT_REST_PORT: 8083
+    CONNECT_KEY_CONVERTER_SCHEMAS_ENABLE: false
+    CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: false
+    DB_HOST: postgres-cis
+    DB_PORT: 5432
+    DB_USERNAME: postgres
+    DB_PASSWORD: my_pgpassword
+    DB_NAME: posts-db
+    DB_SERVERNAME: posts
 
 ## ------------------------------------------------------
 ## Schema Registry
