@@ -6,6 +6,9 @@ cp-zookeeper:
   servers: 1
   image: confluentinc/cp-zookeeper
   imageTag: 6.1.0
+  prometheus:
+    jmx:
+      enabled: false
 
 ## ------------------------------------------------------
 ## Kafka
@@ -15,6 +18,9 @@ cp-kafka:
   brokers: 3
   image: confluentinc/cp-enterprise-kafka
   imageTag: 6.1.0
+  prometheus:
+    jmx:
+      enabled: false
 
 ## ------------------------------------------------------
 ## Kafka Connect
@@ -37,14 +43,17 @@ cp-kafka-connect:
   #  requests:
   #   cpu: 100m
   #   memory: 128Mi
+  prometheus:
+    jmx:
+      enabled: false
   configurationOverrides:
     topic.creation.default.replication.factor: 1
     key.converter.schemas.enable: true
     key.converter: io.confluent.connect.avro.AvroConverter
-    key.converter.schema.registry.url: http://my-kafka-cp-schema-registry:8081
+    key.converter.schema.registry.url: http://blog-service-kafka-cp-schema-registry:8081
     value.converter.schemas.enable: true
     value.converter: io.confluent.connect.avro.AvroConverter
-    value.converter.schema.registry.url: http://my-kafka-cp-schema-registry:8081
+    value.converter.schema.registry.url: http://blog-service-kafka-cp-schema-registry:8081
   customEnv:
     CONNECT_PLUGIN_PATH: /usr/share/java,/usr/share/confluent-hub-components,/kafka/connect,/kafka/libs
     CONFIG_STORAGE_TOPIC: my_connect_configs
