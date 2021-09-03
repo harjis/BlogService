@@ -1,14 +1,14 @@
 using System.Threading.Tasks;
-using PostService.DAL;
-using PostService.Outbox.Events;
+using Microsoft.EntityFrameworkCore;
+using Outbox.Outbox.Events;
 
-namespace PostService.Outbox
+namespace Outbox.Outbox
 {
-    public class OutboxManager
+    public class OutboxManager<Context> where Context : DbContext
     {
-        private readonly PostDbContext _dbContext;
+        private readonly Context _dbContext;
 
-        public OutboxManager(PostDbContext dbContext)
+        public OutboxManager(Context dbContext)
         {
             _dbContext = dbContext;
         }

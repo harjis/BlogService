@@ -1,18 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Builder.Extensions;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Outbox.Outbox;
 using PostService.DAL;
-using PostService.Outbox;
 
 namespace PostService
 {
@@ -45,7 +38,7 @@ namespace PostService
             services.AddDbContext<PostDbContext>(options => options.UseNpgsql(connectionString));
             services.AddControllersWithViews();
             services.AddScoped<PostRepository>();
-            services.AddScoped<OutboxManager>();
+            services.AddScoped<OutboxManager<PostDbContext>>();
             services.AddScoped<Services.PostService>();
             services.AddScoped<UnitOfWork>();
         }

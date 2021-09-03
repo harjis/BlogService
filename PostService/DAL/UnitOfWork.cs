@@ -1,19 +1,18 @@
 using System;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using PostService.Outbox;
+using Outbox.Outbox;
 
 namespace PostService.DAL
 {
     public sealed class UnitOfWork : IDisposable
     {
         public readonly PostRepository PostRepository;
-        public readonly OutboxManager OutboxManager;
+        public readonly OutboxManager<PostDbContext> OutboxManager;
 
         private bool _disposed;
         private readonly PostDbContext _dbContext;
 
-        public UnitOfWork(PostDbContext dbContext, PostRepository postRepository, OutboxManager outboxManager)
+        public UnitOfWork(PostDbContext dbContext, PostRepository postRepository, OutboxManager<PostDbContext> outboxManager)
         {
             _dbContext = dbContext;
             PostRepository = postRepository;

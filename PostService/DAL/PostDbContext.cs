@@ -10,12 +10,12 @@ namespace PostService.DAL
         }
 
         public DbSet<Post> Posts { get; set; }
-        public DbSet<Outbox.Models.Outbox> Outboxes { get; set; }
+        public DbSet<Outbox.Outbox.Models.Outbox> Outboxes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Post>().ToTable("Posts");
-            modelBuilder.Entity<Outbox.Models.Outbox>().ToTable("Outbox");
+            modelBuilder.Entity<Outbox.Outbox.Models.Outbox>().ToTable("Outbox");
         }
     }
 }

@@ -1,12 +1,11 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace PostService.Outbox.Models
+namespace Outbox.Outbox.Models
 {
     public class Outbox
     {
-        [DatabaseGenerated((DatabaseGeneratedOption.None)), Required]
+        [DatabaseGenerated(DatabaseGeneratedOption.None), Required]
         public string id { get; set; }
 
         [StringLength(255), Required] public string aggregatetype { get; set; }

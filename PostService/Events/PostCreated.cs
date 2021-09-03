@@ -1,7 +1,7 @@
 using System;
 using System.Text.Json;
+using Outbox.Outbox.Events;
 using PostService.Models;
-using PostService.Outbox.Events;
 
 namespace PostService.Events
 {
@@ -22,7 +22,7 @@ namespace PostService.Events
             Payload = post;
         }
 
-        public Outbox.Models.Outbox ToOutboxModel()
+        public Outbox.Outbox.Models.Outbox ToOutboxModel()
         {
             return new()
             {

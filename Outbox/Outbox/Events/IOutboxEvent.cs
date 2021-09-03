@@ -1,4 +1,4 @@
-namespace PostService.Outbox.Events
+namespace Outbox.Outbox.Events
 {
     public interface IOutboxEvent<T>
     {
