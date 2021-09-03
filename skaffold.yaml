@@ -3,7 +3,16 @@ kind: Config
 build:
   artifacts:
     - image: d0rka/post-service
-      context: PostService
+      context: .
+      docker:
+        dockerfile: PostService/Dockerfile
+      sync:
+        infer:
+          - "**/*"
+    - image: d0rka/comment-service
+      context: .
+      docker:
+        dockerfile: CommentService/Dockerfile
       sync:
         infer:
           - "**/*"

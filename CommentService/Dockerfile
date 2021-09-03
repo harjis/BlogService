@@ -1,21 +1,20 @@
-FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
-
-# So that we can run migrations
-RUN dotnet tool install --global dotnet-ef --version 5.0.4
-ENV PATH="${PATH}:/root/.dotnet/tools"
-
-WORKDIR /source
-
-# copy csproj and restore as distinct layers
-COPY CommentService.csproj .
-
-# copy and publish app and libraries
-COPY . .
-RUN dotnet build
-RUN dotnet publish -c release -o /app --no-restore
-
-# final stage/image
-FROM mcr.microsoft.com/dotnet/aspnet:5.0
+FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
 WORKDIR /app
-COPY --from=build /app .
+EXPOSE 80
+EXPOSE 443
+
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+WORKDIR /src
+COPY ["CommentService/CommentService.csproj", "CommentService/"]
+RUN dotnet restore "CommentService/CommentService.csproj"
+COPY . .
+WORKDIR "/src/CommentService"
+RUN dotnet build "CommentService.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "CommentService.csproj" -c Release -o /app/publish
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "CommentService.dll"]

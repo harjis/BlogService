@@ -1,13 +1,13 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: db-migrate
+  name: db-migrate-posts
 spec:
   template:
     spec:
       restartPolicy: Never
       containers:
-        - name: db-migrate
+        - name: db-migrate-posts
           image: d0rka/post-service-migrations
           imagePullPolicy: Never
           env:
