@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostService", "PostService\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommentService", "CommentService\CommentService.csproj", "{D20E1F48-EDB9-4570-BC46-9B3F5B26B143}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostService.DbMigrations", "PostService.DbMigrations\PostService.DbMigrations.csproj", "{C6196B10-57E7-4667-8F6C-B9B1EA30016F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{D20E1F48-EDB9-4570-BC46-9B3F5B26B143}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D20E1F48-EDB9-4570-BC46-9B3F5B26B143}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D20E1F48-EDB9-4570-BC46-9B3F5B26B143}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6196B10-57E7-4667-8F6C-B9B1EA30016F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6196B10-57E7-4667-8F6C-B9B1EA30016F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6196B10-57E7-4667-8F6C-B9B1EA30016F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6196B10-57E7-4667-8F6C-B9B1EA30016F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -1,16 +1,20 @@
-FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
-WORKDIR /source
-
-# copy csproj and restore as distinct layers
-COPY PostService.csproj .
-
-# copy and publish app and libraries
-COPY . .
-RUN dotnet build
-RUN dotnet publish -c release -o /app --no-restore
-
-# final stage/image
-FROM mcr.microsoft.com/dotnet/aspnet:5.0
+FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
 WORKDIR /app
-COPY --from=build /app .
+EXPOSE 80
+EXPOSE 443
+
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+WORKDIR /src
+COPY ["PostService/PostService.csproj", "PostService/"]
+RUN dotnet restore "PostService/PostService.csproj"
+COPY . .
+WORKDIR "/src/PostService"
+RUN dotnet build "PostService.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "PostService.csproj" -c Release -o /app/publish
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "PostService.dll"]
