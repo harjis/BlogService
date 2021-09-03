@@ -60,7 +60,7 @@ cp-kafka-connect:
     CONNECT_REST_PORT: 8083
     CONNECT_KEY_CONVERTER_SCHEMAS_ENABLE: false
     CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: false
-    DB_HOST: postgres-cis
+    DB_HOST: postgresql
     DB_PORT: 5432
     DB_USERNAME: postgres
     DB_PASSWORD: my_pgpassword

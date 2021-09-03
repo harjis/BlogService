@@ -8,11 +8,11 @@ build:
         dockerfile: PostService/Dockerfile
       sync:
         infer:
-          - "**/*"
+          - "**/*.cs"
     - image: d0rka/comment-service
       context: .
       docker:
         dockerfile: CommentService/Dockerfile
       sync:
         infer:
-          - "**/*"
+          - "**/*.cs"

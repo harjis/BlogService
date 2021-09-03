@@ -24,6 +24,11 @@ kubectl create secret generic post-db-password --from-literal postgresql-passwor
 ./db/migrate.sh
 ```
 
+4. Install kafka
+```shell
+./kafka/install.sh
+```
+
 4. Start application
 ```shell
 skaffold dev
