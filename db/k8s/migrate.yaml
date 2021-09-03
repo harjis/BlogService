@@ -7,8 +7,8 @@ spec:
     spec:
       restartPolicy: Never
       containers:
-        - name: db-create
-          image: d0rka/k8s-migration-example-migrator
+        - name: db-migrate
+          image: d0rka/post-service-migrations
           imagePullPolicy: Never
           env:
             - name: POSTGRES_HOST

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PostService.DAL;
 
-namespace PostService.Migrations
+namespace PostService.DbMigrations.Migrations
 {
     [DbContext(typeof(PostDbContext))]
     partial class PostDbContextModelSnapshot : ModelSnapshot
@@ -15,7 +15,7 @@ namespace PostService.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
-                .HasAnnotation("ProductVersion", "5.0.5")
+                .HasAnnotation("ProductVersion", "5.0.9")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
             modelBuilder.Entity("PostService.Models.Post", b =>

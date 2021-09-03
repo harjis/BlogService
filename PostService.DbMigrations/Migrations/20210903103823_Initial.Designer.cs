@@ -6,18 +6,18 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PostService.DAL;
 
-namespace PostService.Migrations
+namespace PostService.DbMigrations.Migrations
 {
     [DbContext(typeof(PostDbContext))]
-    [Migration("20210421115831_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20210903103823_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
-                .HasAnnotation("ProductVersion", "5.0.5")
+                .HasAnnotation("ProductVersion", "5.0.9")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
             modelBuilder.Entity("PostService.Models.Post", b =>
@@ -38,6 +38,35 @@ namespace PostService.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Posts");
+                });
+
+            modelBuilder.Entity("PostService.Outbox.Models.Outbox", b =>
+                {
+                    b.Property<string>("id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("aggregateid")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("aggregatetype")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("payload")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<string>("type")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Outbox");
                 });
 #pragma warning restore 612, 618
         }
