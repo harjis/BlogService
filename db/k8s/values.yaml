@@ -8,9 +8,3 @@ image:
 
 persistence:
   existingClaim: blog-db-pvc
-
-#postgresqlConfiguration:
-#  listenAddresses: '*'
-#  walLevel: 'logical'
-#  maxWalSenders: 1
-#  maxReplicationSlots: 1

@@ -1,0 +1,26 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: db-seed
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: db-seed
+          image: d0rka/k8s-migration-example-seed
+          imagePullPolicy: Never
+          env:
+            - name: POSTGRES_HOST
+              value: postgresql
+            - name: POSTGRES_PORT
+              value: '5432'
+            - name: POSTGRES_USERNAME
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pgpassword
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_DATABASE
+              value: posts-db

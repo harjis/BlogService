@@ -3,4 +3,4 @@
 helm uninstall postgresql
 
 __dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-bash ${__dir}/pvc-delete.sh
+kubectl delete -f "${__dir}"/k8s/db-pvc.yaml

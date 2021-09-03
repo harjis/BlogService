@@ -1,8 +1,9 @@
 #!/bin/bash
 
 __dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-bash ${__dir}/pvc-apply.sh
+
+kubectl apply -f "${__dir}"/k8s/db-pvc.yaml
 
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo update
-helm install postgresql bitnami/postgresql -f k8s-postgres/values.yaml
+helm install postgresql bitnami/postgresql -f "${__dir}"/k8s/values.yaml
