@@ -4,11 +4,11 @@ using Outbox.Outbox.Events;
 
 namespace Outbox.Outbox
 {
-    public class OutboxManager<Context> where Context : DbContext
+    public class OutboxManager<TContext> where TContext : DbContext
     {
-        private readonly Context _dbContext;
+        private readonly TContext _dbContext;
 
-        public OutboxManager(Context dbContext)
+        public OutboxManager(TContext dbContext)
         {
             _dbContext = dbContext;
         }

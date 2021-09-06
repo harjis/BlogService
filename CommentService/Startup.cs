@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CommentService.Consumers;
+using CommentService.BackgroundServices;
 using CommentService.DAL;
+using CommentService.Integration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -42,7 +43,8 @@ namespace CommentService
 
             services.AddDbContext<CommentDbContext>(options => options.UseNpgsql(connectionString));
 
-            services.AddHostedService<PostsConsumer>();
+            services.AddScoped<PostsConsumer>();
+            services.AddHostedService<PostsBackgroundService>();
             
             services.AddControllersWithViews();
         }
