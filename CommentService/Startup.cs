@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using CommentService.BackgroundServices;
 using CommentService.DAL;
 using CommentService.Integration;
+using CommentService.Integration.Dto;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -12,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Outbox.Consumer.Repositories;
 
 namespace CommentService
 {
@@ -43,6 +45,7 @@ namespace CommentService
 
             services.AddDbContext<CommentDbContext>(options => options.UseNpgsql(connectionString));
 
+            services.AddScoped<ConsumedMessageRepository<CommentDbContext, Post>>();
             services.AddScoped<PostsConsumer>();
             services.AddHostedService<PostsBackgroundService>();
             
