@@ -2,15 +2,17 @@
 using CommentService.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace CommentService.DbMigrations.Migrations
 {
     [DbContext(typeof(CommentDbContext))]
-    partial class CommentDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210906150857_AddConsumedMessages")]
+    partial class AddConsumedMessages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

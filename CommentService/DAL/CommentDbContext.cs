@@ -14,6 +14,7 @@ namespace CommentService.DAL
             modelBuilder.Entity<Comment>().ToTable("Comments");
         }
 
-        public DbSet<CommentService.Models.Comment> Comment { get; set; }
+        public DbSet<Comment> Comment { get; set; }
+        public DbSet<Outbox.Consumer.Models.ConsumedEvent> ConsumedEvents { get; set; }
     }
 }

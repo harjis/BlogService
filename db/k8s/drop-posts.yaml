@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: db-drop-posts
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: db-drop-posts
+          image: d0rka/post-service-migrations
+          imagePullPolicy: Never
+          args: ["drop=true"]
+          env:
+            - name: POSTGRES_HOST
+              value: postgresql
+            - name: POSTGRES_PORT
+              value: '5432'
+            - name: POSTGRES_USERNAME
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pgpassword
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_DATABASE
+              value: posts-db
