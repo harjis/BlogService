@@ -6,6 +6,7 @@ using CommentService.BackgroundServices;
 using CommentService.DAL;
 using CommentService.Integration;
 using CommentService.Integration.Dto;
+using CommentService.Integration.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -45,6 +46,7 @@ namespace CommentService
 
             services.AddDbContext<CommentDbContext>(options => options.UseNpgsql(connectionString));
 
+            services.AddScoped<PostRepository>();
             services.AddScoped<ConsumedMessageRepository<CommentDbContext, Post>>();
             services.AddScoped<PostsConsumer>();
             services.AddHostedService<PostsBackgroundService>();

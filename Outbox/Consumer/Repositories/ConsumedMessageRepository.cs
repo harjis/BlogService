@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Outbox.Consumer.Events;
 using Outbox.Consumer.Models;

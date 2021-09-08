@@ -22,7 +22,7 @@ namespace CommentService.Controllers
         // GET: Comments
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Comment.ToListAsync());
+            return View(await _context.Comments.ToListAsync());
         }
 
         // GET: Comments/Details/5
@@ -33,7 +33,7 @@ namespace CommentService.Controllers
                 return NotFound();
             }
 
-            var comment = await _context.Comment
+            var comment = await _context.Comments
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (comment == null)
             {
@@ -73,7 +73,7 @@ namespace CommentService.Controllers
                 return NotFound();
             }
 
-            var comment = await _context.Comment.FindAsync(id);
+            var comment = await _context.Comments.FindAsync(id);
             if (comment == null)
             {
                 return NotFound();
@@ -124,7 +124,7 @@ namespace CommentService.Controllers
                 return NotFound();
             }
 
-            var comment = await _context.Comment
+            var comment = await _context.Comments
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (comment == null)
             {
@@ -139,15 +139,15 @@ namespace CommentService.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var comment = await _context.Comment.FindAsync(id);
-            _context.Comment.Remove(comment);
+            var comment = await _context.Comments.FindAsync(id);
+            _context.Comments.Remove(comment);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool CommentExists(int id)
         {
-            return _context.Comment.Any(e => e.Id == id);
+            return _context.Comments.Any(e => e.Id == id);
         }
     }
 }

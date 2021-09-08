@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Threading;
 using CommentService.DAL;
 using CommentService.Integration.Dto;
+using CommentService.Integration.Repositories;
 using Confluent.Kafka;
 using Outbox.Consumer.Events;
 using Outbox.Consumer.Repositories;
@@ -15,10 +16,12 @@ namespace CommentService.Integration
         private readonly IConsumer<string, string> _kafkaConsumer;
         
         private readonly ConsumedMessageRepository<CommentDbContext, Post> _consumedMessageRepository;
+        private readonly PostRepository _postRepository;
 
-        public PostsConsumer(ConsumedMessageRepository<CommentDbContext, Post> consumedMessageRepository)
+        public PostsConsumer(ConsumedMessageRepository<CommentDbContext, Post> consumedMessageRepository, PostRepository postRepository)
         {
             _consumedMessageRepository = consumedMessageRepository;
+            _postRepository = postRepository;
             
             var consumerConfig = new ConsumerConfig
             {
@@ -85,7 +88,16 @@ namespace CommentService.Integration
         private void OnReceiveEvent(ReceivedEvent<Post> receivedEvent)
         {
             Console.WriteLine($"CommentService.Integration.PostsBackgroundService has the event {receivedEvent.Id} {receivedEvent.Type}");
+            if (receivedEvent.Type == "PostCreated")
+            {
+                _postRepository.Add(receivedEvent.Payload);
+            }
+            else
+            {
+                Console.WriteLine($"CommentService.Integration.PostsBackgroundService HAS RECEIVED AN UNKNOWN EVENT {receivedEvent.Id} {receivedEvent.Type}");
+            }
         }
+        
         private ReceivedEvent<Post> ProcessOutboxEvent(ConsumeResult<string, string> consumeResult)
         {
             var messageIdBuffer = consumeResult.Message.Headers.GetLastBytes("id");
@@ -94,7 +106,6 @@ namespace CommentService.Integration
             var eventTypeBuffer = consumeResult.Message.Headers.GetLastBytes("eventType");
             var type = System.Text.Encoding.UTF8.GetString(eventTypeBuffer, 0, eventTypeBuffer.Length);
 
-            Console.WriteLine($"Message was {consumeResult.Message.Value}");
             return new ReceivedEvent<Post>(id, type, JsonSerializer.Deserialize<Post>(consumeResult.Message.Value));
         }
     }
