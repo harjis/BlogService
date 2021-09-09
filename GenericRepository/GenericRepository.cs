@@ -1,24 +1,26 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-namespace PostService.DAL
+namespace GenericRepository
 {
-    public class GenericRepository<TEntity> where TEntity : class
+    public class GenericRepository<TApplicationDbContext, TEntity> 
+        where TApplicationDbContext : DbContext 
+        where TEntity : class
     {
-        protected readonly PostDbContext _dbContext;
+        private readonly TApplicationDbContext _dbContext;
         private readonly DbSet<TEntity> _dbSet;
 
-        public GenericRepository(PostDbContext dbContext)
+        public GenericRepository(TApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
             _dbSet = dbContext.Set<TEntity>();
         }
 
-        public async virtual Task<IEnumerable<TEntity>> Get(
+        public virtual async Task<IEnumerable<TEntity>> Get(
             Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             string includedProperties = ""
@@ -54,7 +56,7 @@ namespace PostService.DAL
             return await GetById(id) != null;
         }
 
-        public async virtual Task Add(TEntity entity)
+        public virtual async Task Add(TEntity entity)
         {
             await _dbSet.AddAsync(entity);
         }

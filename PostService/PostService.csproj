@@ -15,6 +15,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\GenericRepository\GenericRepository.csproj" />
       <ProjectReference Include="..\Outbox\Outbox.csproj" />
     </ItemGroup>
 
