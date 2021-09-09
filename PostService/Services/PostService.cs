@@ -23,5 +23,25 @@ namespace PostService.Services
                 await _unitOfWork.OutboxManager.FireEvent(new PostCreated(post));
             });
         }
+
+        public async Task UpdatePost(Post post)
+        {
+            await _unitOfWork.ExecuteInTransaction(async () =>
+            {
+                _unitOfWork.PostRepository.Update(post);
+                await _unitOfWork.Save();
+                await _unitOfWork.OutboxManager.FireEvent(new PostUpdated(post));
+            });
+        }
+
+        public async Task DeletePost(Post post)
+        {
+            await _unitOfWork.ExecuteInTransaction(async () =>
+            {
+                _unitOfWork.PostRepository.Delete(post);
+                await _unitOfWork.Save();
+                await _unitOfWork.OutboxManager.FireEvent(new PostDeleted(post));
+            });
+        }
     }
 }
