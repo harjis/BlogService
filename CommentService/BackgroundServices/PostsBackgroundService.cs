@@ -1,16 +1,18 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using CommentService.Integration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace CommentService.BackgroundServices
 {
     public class PostsBackgroundService : BackgroundService
     {
-        private readonly PostsConsumer _postsConsumer;
-        public PostsBackgroundService(PostsConsumer postsConsumer)
+        private readonly IServiceProvider _serviceProvider;
+        public PostsBackgroundService(IServiceProvider serviceProvider)
         {
-            _postsConsumer = postsConsumer;
+            _serviceProvider = serviceProvider;
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
@@ -22,13 +24,9 @@ namespace CommentService.BackgroundServices
 
         private void StartConsumerLoop(CancellationToken cancellationToken)
         {
-            _postsConsumer.StartConsumerLoop(cancellationToken);
-        }
-
-        public override void Dispose()
-        {
-            _postsConsumer.Dispose();
-            base.Dispose();
+            using var scope = _serviceProvider.CreateScope();
+            var scopedPostsConsumer = scope.ServiceProvider.GetRequiredService<PostsConsumer>();
+            scopedPostsConsumer.StartConsumerLoop(cancellationToken);
         }
     }
 }
