@@ -13,16 +13,18 @@ namespace CommentService.Controllers
     public class CommentsController : Controller
     {
         private readonly CommentDbContext _context;
+        private readonly CommentsRepository _commentsRepository;
 
-        public CommentsController(CommentDbContext context)
+        public CommentsController(CommentDbContext context, CommentsRepository commentsRepository)
         {
             _context = context;
+            _commentsRepository = commentsRepository;
         }
 
         // GET: Comments
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Comments.ToListAsync());
+            return View(await _commentsRepository.Get());
         }
 
         // GET: Comments/Details/5
@@ -33,8 +35,7 @@ namespace CommentService.Controllers
                 return NotFound();
             }
 
-            var comment = await _context.Comments
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var comment = await _commentsRepository.GetById(id);
             if (comment == null)
             {
                 return NotFound();
@@ -58,7 +59,7 @@ namespace CommentService.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(comment);
+                await _commentsRepository.Add(comment);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -73,7 +74,7 @@ namespace CommentService.Controllers
                 return NotFound();
             }
 
-            var comment = await _context.Comments.FindAsync(id);
+            var comment = await _commentsRepository.GetById(id);
             if (comment == null)
             {
                 return NotFound();
@@ -97,7 +98,7 @@ namespace CommentService.Controllers
             {
                 try
                 {
-                    _context.Update(comment);
+                    _commentsRepository.Update(comment);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -124,8 +125,7 @@ namespace CommentService.Controllers
                 return NotFound();
             }
 
-            var comment = await _context.Comments
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var comment = await _commentsRepository.GetById(id);
             if (comment == null)
             {
                 return NotFound();
@@ -139,8 +139,7 @@ namespace CommentService.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var comment = await _context.Comments.FindAsync(id);
-            _context.Comments.Remove(comment);
+            _commentsRepository.Delete(id);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

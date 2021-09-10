@@ -88,13 +88,20 @@ namespace CommentService.Integration
         private void OnReceiveEvent(ReceivedEvent<Post> receivedEvent)
         {
             Console.WriteLine($"CommentService.Integration.PostsBackgroundService has the event {receivedEvent.Id} {receivedEvent.Type}");
-            if (receivedEvent.Type == "PostCreated")
+            switch (receivedEvent.Type)
             {
-                _postRepository.Add(receivedEvent.Payload);
-            }
-            else
-            {
-                Console.WriteLine($"CommentService.Integration.PostsBackgroundService HAS RECEIVED AN UNKNOWN EVENT {receivedEvent.Id} {receivedEvent.Type}");
+                case "PostCreated":
+                    _postRepository.Add(receivedEvent.Payload);
+                    break;
+                case "PostUpdated":
+                    _postRepository.Update(receivedEvent.Payload);
+                    break;
+                case "PostDeleted":
+                    _postRepository.Delete(receivedEvent.Payload.Id);
+                    break;
+                default:
+                    Console.WriteLine($"CommentService.Integration.PostsBackgroundService HAS RECEIVED AN UNKNOWN EVENT {receivedEvent.Id} {receivedEvent.Type}");
+                    break;
             }
         }
         

@@ -46,6 +46,7 @@ namespace CommentService
 
             services.AddDbContext<CommentDbContext>(options => options.UseNpgsql(connectionString));
 
+            services.AddScoped<CommentsRepository>();
             services.AddScoped<PostRepository>();
             services.AddScoped<ConsumedMessageRepository<CommentDbContext, Post>>();
             services.AddScoped<PostsConsumer>();
