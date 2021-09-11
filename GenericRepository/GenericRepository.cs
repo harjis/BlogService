@@ -46,7 +46,7 @@ namespace GenericRepository
             return await query.ToListAsync();
         }
 
-        public async virtual Task<TEntity> GetById(object id)
+        public virtual async Task<TEntity> GetById(object id)
         {
             return await _dbSet.FindAsync(id);
         }
