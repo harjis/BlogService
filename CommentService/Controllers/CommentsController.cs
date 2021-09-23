@@ -45,8 +45,9 @@ namespace CommentService.Controllers
         }
 
         // GET: Comments/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            await PopulatePostsDropdown();
             return View();
         }
 
@@ -55,7 +56,7 @@ namespace CommentService.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Content")] Comment comment)
+        public async Task<IActionResult> Create([Bind("Id,Content,PostId")] Comment comment)
         {
             if (ModelState.IsValid)
             {
@@ -147,6 +148,12 @@ namespace CommentService.Controllers
         private bool CommentExists(int id)
         {
             return _context.Comments.Any(e => e.Id == id);
+        }
+
+        private async Task PopulatePostsDropdown(object selectedPost = null)
+        {
+            var posts = await _context.Posts.ToListAsync();
+            ViewBag.PostId = new SelectList(posts, "Id", "Title", selectedPost);
         }
     }
 }
