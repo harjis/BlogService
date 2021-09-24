@@ -20,7 +20,7 @@ namespace PostService.Services
             {
                 await _unitOfWork.PostRepository.Add(post);
                 await _unitOfWork.Save();
-                await _unitOfWork.OutboxManager.FireEvent(new PostCreated(post));
+                await _unitOfWork.EventManager.FireEvent(new PostCreated(post));
             });
         }
 
@@ -30,7 +30,7 @@ namespace PostService.Services
             {
                 _unitOfWork.PostRepository.Update(post);
                 await _unitOfWork.Save();
-                await _unitOfWork.OutboxManager.FireEvent(new PostUpdated(post));
+                await _unitOfWork.EventManager.FireEvent(new PostUpdated(post));
             });
         }
 
@@ -40,7 +40,7 @@ namespace PostService.Services
             {
                 _unitOfWork.PostRepository.Delete(post);
                 await _unitOfWork.Save();
-                await _unitOfWork.OutboxManager.FireEvent(new PostDeleted(post));
+                await _unitOfWork.EventManager.FireEvent(new PostDeleted(post));
             });
         }
     }

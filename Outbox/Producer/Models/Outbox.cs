@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Outbox.Outbox.Models
+namespace Outbox.Producer.Models
 {
     public class Outbox
     {

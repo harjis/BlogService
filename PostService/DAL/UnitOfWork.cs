@@ -1,22 +1,23 @@
 using System;
 using System.Threading.Tasks;
-using Outbox.Outbox;
+using Outbox.Producer;
+using Outbox.Producer.Managers;
 
 namespace PostService.DAL
 {
     public sealed class UnitOfWork : IDisposable
     {
         public readonly PostRepository PostRepository;
-        public readonly OutboxManager<PostDbContext> OutboxManager;
+        public readonly EventManager<PostDbContext> EventManager;
 
         private bool _disposed;
         private readonly PostDbContext _dbContext;
 
-        public UnitOfWork(PostDbContext dbContext, PostRepository postRepository, OutboxManager<PostDbContext> outboxManager)
+        public UnitOfWork(PostDbContext dbContext, PostRepository postRepository, EventManager<PostDbContext> eventManager)
         {
             _dbContext = dbContext;
             PostRepository = postRepository;
-            OutboxManager = outboxManager;
+            EventManager = eventManager;
         }
 
         public async Task ExecuteInTransaction(Func<Task> func)

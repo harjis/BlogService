@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Outbox.Outbox;
+using Outbox.Producer.Managers;
 using PostService.DAL;
 
 namespace PostService
@@ -38,7 +38,7 @@ namespace PostService
             services.AddDbContext<PostDbContext>(options => options.UseNpgsql(connectionString));
             services.AddControllersWithViews();
             services.AddScoped<PostRepository>();
-            services.AddScoped<OutboxManager<PostDbContext>>();
+            services.AddScoped<EventManager<PostDbContext>>();
             services.AddScoped<Services.PostService>();
             services.AddScoped<UnitOfWork>();
         }

@@ -1,4 +1,4 @@
-namespace Outbox.Outbox.Events
+namespace Outbox.Producer.Events
 {
     public interface IOutboxEvent<T>
     {

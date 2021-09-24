@@ -1,14 +1,14 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Outbox.Outbox.Events;
+using Outbox.Producer.Events;
 
-namespace Outbox.Outbox
+namespace Outbox.Producer.Managers
 {
-    public class OutboxManager<TContext> where TContext : DbContext
+    public class EventManager<TContext> where TContext : DbContext
     {
         private readonly TContext _dbContext;
 
-        public OutboxManager(TContext dbContext)
+        public EventManager(TContext dbContext)
         {
             _dbContext = dbContext;
         }
