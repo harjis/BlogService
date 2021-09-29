@@ -1,4 +1,3 @@
-using GenericRepository;
 using PostService.Models;
 
 namespace PostService.DAL

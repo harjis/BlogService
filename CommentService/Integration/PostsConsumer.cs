@@ -15,12 +15,12 @@ namespace CommentService.Integration
         private readonly string _topic;
         private readonly IConsumer<string, string> _kafkaConsumer;
         
-        private readonly ConsumedMessageRepository<CommentDbContext, Post> _consumedMessageRepository;
+        private readonly ConsumedEventRepository<CommentDbContext, Post> _consumedEventRepository;
         private readonly PostRepository _postRepository;
 
-        public PostsConsumer(ConsumedMessageRepository<CommentDbContext, Post> consumedMessageRepository, PostRepository postRepository)
+        public PostsConsumer(ConsumedEventRepository<CommentDbContext, Post> consumedEventRepository, PostRepository postRepository)
         {
-            _consumedMessageRepository = consumedMessageRepository;
+            _consumedEventRepository = consumedEventRepository;
             _postRepository = postRepository;
             
             var consumerConfig = new ConsumerConfig
@@ -42,9 +42,9 @@ namespace CommentService.Integration
                 try
                 {
                     var receivedEvent = ProcessOutboxEvent(_kafkaConsumer.Consume(cancellationToken));
-                    if (!_consumedMessageRepository.HasBeenConsumed(receivedEvent))
+                    if (!_consumedEventRepository.HasBeenConsumed(receivedEvent))
                     {
-                        _consumedMessageRepository.Add(receivedEvent);
+                        _consumedEventRepository.Add(receivedEvent);
                          // Do some folder stuff
                          OnReceiveEvent(receivedEvent);
                     }

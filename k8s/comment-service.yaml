@@ -16,7 +16,7 @@ spec:
         - name: comment-service
           image: d0rka/comment-service
           ports:
-            - containerPort: 80
+            - containerPort: 8080
           env:
             - name: POSTGRES_HOST
               value: postgresql
@@ -41,5 +41,5 @@ spec:
   selector:
     component: comment-service-server
   ports:
-    - port: 80
-      targetPort: 80
+    - port: 8080
+      targetPort: 8080

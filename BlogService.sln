@@ -8,10 +8,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostService.DbMigrations", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommentService.DbMigrations", "CommentService.DbMigrations\CommentService.DbMigrations.csproj", "{A9DE6D1F-51DE-4F1C-B231-A9A345B49DE6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Outbox", "Outbox\Outbox.csproj", "{3CDAD4E9-B582-43C2-9023-F5792F832577}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenericRepository", "GenericRepository\GenericRepository.csproj", "{A4B1F65B-C40D-4862-B9ED-E2C79BEF0FAE}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,13 +30,5 @@ Global
 		{A9DE6D1F-51DE-4F1C-B231-A9A345B49DE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9DE6D1F-51DE-4F1C-B231-A9A345B49DE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A9DE6D1F-51DE-4F1C-B231-A9A345B49DE6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3CDAD4E9-B582-43C2-9023-F5792F832577}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3CDAD4E9-B582-43C2-9023-F5792F832577}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3CDAD4E9-B582-43C2-9023-F5792F832577}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3CDAD4E9-B582-43C2-9023-F5792F832577}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A4B1F65B-C40D-4862-B9ED-E2C79BEF0FAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A4B1F65B-C40D-4862-B9ED-E2C79BEF0FAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A4B1F65B-C40D-4862-B9ED-E2C79BEF0FAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A4B1F65B-C40D-4862-B9ED-E2C79BEF0FAE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

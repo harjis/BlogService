@@ -4,7 +4,7 @@ global:
 
 image:
   repository: debezium/postgres
-  tag: 12
+  tag: "12"
 
 persistence:
   existingClaim: blog-db-pvc

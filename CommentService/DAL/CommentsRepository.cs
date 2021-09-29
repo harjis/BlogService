@@ -1,5 +1,4 @@
 using CommentService.Models;
-using GenericRepository;
 
 namespace CommentService.DAL
 {

@@ -48,7 +48,7 @@ namespace CommentService
 
             services.AddScoped<CommentsRepository>();
             services.AddScoped<PostRepository>();
-            services.AddScoped<ConsumedMessageRepository<CommentDbContext, Post>>();
+            services.AddScoped<ConsumedEventRepository<CommentDbContext, Post>>();
             services.AddScoped<PostsConsumer>();
             services.AddHostedService<PostsBackgroundService>();
             

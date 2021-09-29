@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using Outbox.Producer;
 using Outbox.Producer.Managers;
 
 namespace PostService.DAL
