@@ -15,9 +15,4 @@
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.10" />
     </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\GenericRepository\GenericRepository.csproj" />
-      <ProjectReference Include="..\Outbox\Outbox.csproj" />
-    </ItemGroup>
-
 </Project>
