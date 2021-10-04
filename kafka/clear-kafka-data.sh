@@ -2,7 +2,7 @@
 
 # Clear all pvc
 echo "Clear all pvc"
-kubectl get pvc --no-headers=true | awk '/pvc|kafka/{print $1}' | xargs kubectl delete pvc
+kubectl get pvc --no-headers=true | awk '/kafka/{print $1}' | xargs kubectl delete pvc
 
 # Clear all released pv
 echo "Clear all released pv"

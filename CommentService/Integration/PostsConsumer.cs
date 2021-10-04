@@ -26,7 +26,11 @@ namespace CommentService.Integration
             var consumerConfig = new ConsumerConfig
             {
                 BootstrapServers = "blog-service-kafka-cp-kafka-headless:9092",
-                GroupId = "CommentService"
+                GroupId = "CommentService",
+                // The offset to start reading from if there are no committed offsets (or there was an error in retrieving offsets).
+                AutoOffsetReset = AutoOffsetReset.Earliest,
+                // Do not commit offsets.
+                EnableAutoCommit = false
             };
             _topic = "Post.events";
             _kafkaConsumer = new ConsumerBuilder<string, string>(consumerConfig).Build();
@@ -45,16 +49,14 @@ namespace CommentService.Integration
                     if (!_consumedEventRepository.HasBeenConsumed(receivedEvent))
                     {
                         _consumedEventRepository.Add(receivedEvent);
-                         // Do some folder stuff
-                         OnReceiveEvent(receivedEvent);
+                        // Do some folder stuff
+                        OnReceiveEvent(receivedEvent);
                     }
                     else
                     {
                         Console.WriteLine(
-                            $"Comments service received message {receivedEvent.Id} which has already been consumed");                        
+                            $"Comments service received message {receivedEvent.Id} which has already been consumed");
                     }
-
-                    
                 }
                 catch (OperationCanceledException)
                 {
@@ -63,10 +65,11 @@ namespace CommentService.Integration
                 catch (ConsumeException e)
                 {
                     // Consumer errors should generally be ignored (or logged) unless fatal.
-                    Console.WriteLine($"Consume error: {e.Error.Reason}");
+                    Console.WriteLine($"Consume error: {e.Error.Reason} was fatal: {e.Error.IsFatal}");
 
                     if (e.Error.IsFatal)
                     {
+                        Console.WriteLine("Fatal error: killing the background process");
                         // https://github.com/edenhill/librdkafka/blob/master/INTRODUCTION.md#fatal-consumer-errors
                         break;
                     }

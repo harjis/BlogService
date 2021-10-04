@@ -28,5 +28,13 @@ namespace CommentService.BackgroundServices
             var scopedPostsConsumer = scope.ServiceProvider.GetRequiredService<PostsConsumer>();
             scopedPostsConsumer.StartConsumerLoop(cancellationToken);
         }
+
+        public override void Dispose()
+        {
+            using var scope = _serviceProvider.CreateScope();
+            var scopedPostsConsumer = scope.ServiceProvider.GetRequiredService<PostsConsumer>();
+            scopedPostsConsumer.Dispose();
+            base.Dispose();
+        }
     }
 }
