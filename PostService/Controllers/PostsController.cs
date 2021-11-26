@@ -95,8 +95,7 @@ namespace PostService.Controllers
             {
                 try
                 {
-                    _unitOfWork.PostRepository.Update(post);
-                    await _unitOfWork.Save();
+                    await _postService.UpdatePost(post);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -138,8 +137,8 @@ namespace PostService.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            _unitOfWork.PostRepository.Delete(id);
-            await _unitOfWork.Save();
+            var post = await _unitOfWork.PostRepository.GetById(id);
+            await _postService.DeletePost(post);
             return RedirectToAction(nameof(Index));
         }
 

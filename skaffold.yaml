@@ -3,16 +3,16 @@ kind: Config
 build:
   artifacts:
     - image: d0rka/post-service
-      context: .
-      docker:
-        dockerfile: PostService/Dockerfile
+      context: PostService
+      buildpacks:
+        trustBuilder: true
+        builder: "paketobuildpacks/builder:base"
       sync:
-        infer:
-          - "**/*.cs"
+        auto: true
     - image: d0rka/comment-service
-      context: .
-      docker:
-        dockerfile: CommentService/Dockerfile
+      context: CommentService
+      buildpacks:
+        trustBuilder: true
+        builder: "paketobuildpacks/builder:base"
       sync:
-        infer:
-          - "**/*.cs"
+        auto: true

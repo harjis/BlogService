@@ -2,8 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CommentService.Consumers;
+using CommentService.BackgroundServices;
 using CommentService.DAL;
+using CommentService.Integration;
+using CommentService.Integration.Dto;
+using CommentService.Integration.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -11,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Outbox.Consumer.Repositories;
 
 namespace CommentService
 {
@@ -42,7 +46,11 @@ namespace CommentService
 
             services.AddDbContext<CommentDbContext>(options => options.UseNpgsql(connectionString));
 
-            services.AddHostedService<PostsConsumer>();
+            services.AddScoped<CommentsRepository>();
+            services.AddScoped<PostRepository>();
+            services.AddScoped<ConsumedEventRepository<CommentDbContext, Post>>();
+            services.AddScoped<PostsConsumer>();
+            services.AddHostedService<PostsBackgroundService>();
             
             services.AddControllersWithViews();
         }
@@ -53,16 +61,18 @@ namespace CommentService
             // I think this needs to be before all routing related middleware (UseStaticFiles, UseRouting etc.)
             app.UsePathBase("/comments");
 
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
+            // if (env.IsDevelopment())
+            // {
+            //     app.UseDeveloperExceptionPage();
+            // }
+            // else
+            // {
+            //     app.UseExceptionHandler("/Home/Error");
+            //     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+            //     app.UseHsts();
+            // }
+            
+            app.UseDeveloperExceptionPage();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

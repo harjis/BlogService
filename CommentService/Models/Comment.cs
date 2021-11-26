@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using CommentService.Integration.Models;
 
 namespace CommentService.Models
 {
@@ -9,5 +10,9 @@ namespace CommentService.Models
         public int Id { get; set; }
 
         [StringLength(255)] public string Content { get; set; }
+
+        public int PostId { get; set; }
+
+        public Post Post { get; set; }
     }
 }

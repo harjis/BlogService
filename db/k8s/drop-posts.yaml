@@ -1,15 +1,16 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: db-migrate-posts
+  name: db-drop-posts
 spec:
   template:
     spec:
       restartPolicy: Never
       containers:
-        - name: db-migrate-posts
+        - name: db-drop-posts
           image: d0rka/post-service-migrations
           imagePullPolicy: Never
+          args: ["drop=true"]
           env:
             - name: POSTGRES_HOST
               value: postgresql

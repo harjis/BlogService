@@ -13,16 +13,18 @@ namespace CommentService.Controllers
     public class CommentsController : Controller
     {
         private readonly CommentDbContext _context;
+        private readonly CommentsRepository _commentsRepository;
 
-        public CommentsController(CommentDbContext context)
+        public CommentsController(CommentDbContext context, CommentsRepository commentsRepository)
         {
             _context = context;
+            _commentsRepository = commentsRepository;
         }
 
         // GET: Comments
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Comment.ToListAsync());
+            return View(await _commentsRepository.Get());
         }
 
         // GET: Comments/Details/5
@@ -33,8 +35,7 @@ namespace CommentService.Controllers
                 return NotFound();
             }
 
-            var comment = await _context.Comment
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var comment = await _commentsRepository.GetById(id);
             if (comment == null)
             {
                 return NotFound();
@@ -44,8 +45,9 @@ namespace CommentService.Controllers
         }
 
         // GET: Comments/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            await PopulatePostsDropdown();
             return View();
         }
 
@@ -54,11 +56,11 @@ namespace CommentService.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Content")] Comment comment)
+        public async Task<IActionResult> Create([Bind("Id,Content,PostId")] Comment comment)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(comment);
+                await _commentsRepository.Add(comment);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -73,7 +75,7 @@ namespace CommentService.Controllers
                 return NotFound();
             }
 
-            var comment = await _context.Comment.FindAsync(id);
+            var comment = await _commentsRepository.GetById(id);
             if (comment == null)
             {
                 return NotFound();
@@ -97,7 +99,7 @@ namespace CommentService.Controllers
             {
                 try
                 {
-                    _context.Update(comment);
+                    _commentsRepository.Update(comment);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -124,8 +126,7 @@ namespace CommentService.Controllers
                 return NotFound();
             }
 
-            var comment = await _context.Comment
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var comment = await _commentsRepository.GetById(id);
             if (comment == null)
             {
                 return NotFound();
@@ -139,15 +140,20 @@ namespace CommentService.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var comment = await _context.Comment.FindAsync(id);
-            _context.Comment.Remove(comment);
+            _commentsRepository.Delete(id);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool CommentExists(int id)
         {
-            return _context.Comment.Any(e => e.Id == id);
+            return _context.Comments.Any(e => e.Id == id);
+        }
+
+        private async Task PopulatePostsDropdown(object selectedPost = null)
+        {
+            var posts = await _context.Posts.ToListAsync();
+            ViewBag.PostId = new SelectList(posts, "Id", "Title", selectedPost);
         }
     }
 }

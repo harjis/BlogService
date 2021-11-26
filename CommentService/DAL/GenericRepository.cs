@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-namespace PostService.DAL
+namespace CommentService.DAL
 {
     public class GenericRepository<TApplicationDbContext, TEntity> 
         where TApplicationDbContext : DbContext 

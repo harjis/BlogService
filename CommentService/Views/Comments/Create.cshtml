@@ -18,6 +18,14 @@
                 <span asp-validation-for="Content" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Post" class="control-label"></label>
+                <select asp-for="PostId" class="form-control" asp-items="ViewBag.PostId">
+                    <option value="">-- Select Post --</option>
+                    <option value="99999">Post that doesn't really exist</option>
+                </select>
+                <span asp-validation-for="PostId" class="text-danger" />
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>

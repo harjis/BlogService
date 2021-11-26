@@ -1,15 +1,16 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: db-migrate-posts
+  name: db-drop-comments
 spec:
   template:
     spec:
       restartPolicy: Never
       containers:
-        - name: db-migrate-posts
+        - name: db-drop-comments
           image: d0rka/post-service-migrations
           imagePullPolicy: Never
+          args: ["drop=true"]
           env:
             - name: POSTGRES_HOST
               value: postgresql
@@ -23,4 +24,4 @@ spec:
                   name: pgpassword
                   key: postgresql-password
             - name: POSTGRES_DATABASE
-              value: posts-db
+              value: comments-db

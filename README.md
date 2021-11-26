@@ -6,7 +6,7 @@ You need to have these tools installed:
 
 0. Secret
 ```
-kubectl create secret generic post-db-password --from-literal postgresql-password=my_pgpassword
+kubectl create secret generic pgpassword --from-literal postgresql-password=my_pgpassword
 ```
 
 1. Install postgres

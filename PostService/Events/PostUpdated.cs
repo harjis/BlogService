@@ -5,7 +5,7 @@ using PostService.Models;
 
 namespace PostService.Events
 {
-    public class PostCreated : IOutboxEvent<Post>
+    public class PostUpdated : IOutboxEvent<Post>
     {
         public string Id { get; }
         public string AggregateType { get; set; }
@@ -13,12 +13,12 @@ namespace PostService.Events
         public string Type { get; set; }
         public Post Payload { get; set; }
 
-        public PostCreated(Post post)
+        public PostUpdated(Post post)
         {
             Id = Guid.NewGuid().ToString();
             AggregateType = "Post";
             AggregateId = post.Id.ToString();
-            Type = "PostCreated";
+            Type = "PostUpdated";
             Payload = post;
         }
 
