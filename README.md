@@ -9,29 +9,21 @@ You need to have these tools installed:
 kubectl create secret generic pgpassword --from-literal postgresql-password=my_pgpassword
 ```
 
-1. Install postgres
+## Bring up local environment
+
+1. Install dependencies
 ```shell
-./db/install.sh
+./up.sh
 ```
 
-2. Build images to local repository
-```shell
-./build-local.sh
-```
-
-3. Migrate db
-```shell
-./db/migrate.sh
-```
-
-4. Install kafka
-```shell
-./kafka/install.sh
-```
-
-4. Start application
+2. Start application
 ```shell
 skaffold dev
 ```
-
-5. Navigate to [minikube ip](http://192.168.64.3/posts)
+3. Navigate to [minikube ip](http://192.168.64.3/posts)
+## Teardown
+1. Shutdown skaffold
+2. Remove dependencies
+```shell
+./down.sh
+```
