@@ -6,7 +6,7 @@ You need to have these tools installed:
 
 0. Secret
 ```
-kubectl create secret generic pgpassword --from-literal postgresql-password=my_pgpassword
+kubectl create secret generic pgpassword --from-literal postgres-password=my_pgpassword
 ```
 
 ## Bring up local environment

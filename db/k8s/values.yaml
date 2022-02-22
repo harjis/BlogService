@@ -1,10 +1,13 @@
 global:
   postgresql:
-    existingSecret: post-db-password
+    auth:
+      existingSecret: pgpassword
 
 image:
   repository: debezium/postgres
   tag: "12"
 
-persistence:
-  existingClaim: blog-db-pvc
+
+primary:
+  persistence:
+    existingClaim: blog-db-pvc
