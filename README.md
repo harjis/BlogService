@@ -27,3 +27,9 @@ skaffold dev
 ```shell
 ./down.sh
 ```
+
+## How to disable Kafka Connect
+
+```shell
+helm upgrade blog-service-kafka confluentinc/cp-helm-charts -f kafka/k8s/values.yaml
+```
