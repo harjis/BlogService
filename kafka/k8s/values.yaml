@@ -1,92 +1,130 @@
-## ------------------------------------------------------
-## Zookeeper
-## ------------------------------------------------------
-cp-zookeeper:
-  enabled: true
-  servers: 1
-  image: confluentinc/cp-zookeeper
-  imageTag: 6.1.0
-  prometheus:
-    jmx:
-      enabled: false
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: Zookeeper
+metadata:
+  name: zookeeper
+  namespace: primary-kafka
+spec:
+  replicas: 1
+  image:
+    application: confluentinc/cp-zookeeper:7.4.0
+    init: confluentinc/confluent-init-container:2.6.0
+  dataVolumeCapacity: 1Gi
+  logVolumeCapacity: 1Gi
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: Kafka
+metadata:
+  name: primary-kafka
+  namespace: primary-kafka
+spec:
+  replicas: 1
+  image:
+    application: confluentinc/cp-server:7.4.0
+    init: confluentinc/confluent-init-container:2.6.0
+  dataVolumeCapacity: 1Gi
+  metricReporter:
+    enabled: true
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: SchemaRegistry
+metadata:
+  name: primary-schema-registry
+  namespace: primary-kafka
+spec:
+  replicas: 1
+  image:
+    application: confluentinc/cp-schema-registry:7.4.0
+    init: confluentinc/confluent-init-container:2.6.0
+  configOverrides:
+    server:
+      - kafkastore.topic=_schemas
+  dependencies:
+    kafka:
+      bootstrapEndpoint: primary-kafka:9071
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ControlCenter
+metadata:
+  name: controlcenter
+  namespace: primary-kafka
+spec:
+  replicas: 1
+  image:
+    application: confluentinc/cp-enterprise-control-center:7.4.0
+    init: confluentinc/confluent-init-container:2.6.0
+  dependencies:
+    kafka:
+      bootstrapEndpoint: primary-kafka:9071
+    schemaRegistry:
+      url: http://primary-schema-registry.primary-kafka.svc.cluster.local:8081
+  dataVolumeCapacity: 1Gi
+  podTemplate:
+    probe:
+      liveness:
+        timeoutSeconds: 6000
+        failureThreshold: 100
+  configOverrides:
+    server:
+      - confluent.controlcenter.command.topic.replication=1
+      - confluent.controlcenter.internal.topics.replication=1
+      - confluent.metrics.topic.replication=1
+      - confluent.monitoring.interceptor.topic.replication=1
+      - confluent.controlcenter.schema.registry.url=http://primary-schema-registry.primary-kafka.svc.cluster.local:8081
 
-## ------------------------------------------------------
-## Kafka
-## ------------------------------------------------------
-cp-kafka:
-  enabled: true
-  brokers: 3
-  image: confluentinc/cp-enterprise-kafka
-  imageTag: 6.1.0
-  prometheus:
-    jmx:
-      enabled: false
+---
 
-## ------------------------------------------------------
-## Kafka Connect
-## ------------------------------------------------------
-cp-kafka-connect:
-  enabled: true
-  image: d0rka/confluent-debezium-outbox-image
-  imageTag: 0.1.1
-  ## Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace.
-  ## https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
-  imagePullSecrets:
-  #  - name: "regcred"
-  heapOptions: "-Xms512M -Xmx512M"
-  resources: { }
-  ## If you do want to specify resources, uncomment the following lines, adjust them as necessary,
-  ## and remove the curly braces after 'resources:'
-  #  limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  #  requests:
-  #   cpu: 100m
-  #   memory: 128Mi
-  prometheus:
-    jmx:
-      enabled: false
-  configurationOverrides:
-    topic.creation.default.replication.factor: 1
-    key.converter.schemas.enable: false
-    key.converter: org.apache.kafka.connect.storage.StringConverter
-    value.converter.schemas.enable: false
-    value.converter: org.apache.kafka.connect.storage.StringConverter
-  customEnv:
-    CONNECT_PLUGIN_PATH: /usr/share/java,/usr/share/confluent-hub-components,/kafka/connect,/kafka/libs
-    CONFIG_STORAGE_TOPIC: my_connect_configs
-    OFFSET_STORAGE_TOPIC: my_connect_offsets
-    STATUS_STORAGE_TOPIC: my_source_connect_statuses
-    CONNECT_REST_PORT: 8083
-    CONNECT_KEY_CONVERTER_SCHEMAS_ENABLE: false
-    CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: false
-    DB_HOST: postgresql
-    DB_PORT: 5432
-    DB_USERNAME: postgres
-    DB_PASSWORD: my_pgpassword
-    DB_NAME: posts-db
-    DB_SERVERNAME: posts
 
-## ------------------------------------------------------
-## Schema Registry
-## ------------------------------------------------------
-cp-schema-registry:
-  enabled: false
 
-## ------------------------------------------------------
-## REST Proxy
-## ------------------------------------------------------
-cp-kafka-rest:
-  enabled: false
 
-## ------------------------------------------------------
-## KSQL Server
-## ------------------------------------------------------
-cp-ksql-server:
-  enabled: false
-
-## ------------------------------------------------------
-## Control Center
-## ------------------------------------------------------
-cp-control-center:
-  enabled: false
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-connect
+  namespace: primary-kafka
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-connect
+  template:
+    metadata:
+      labels:
+        app: kafka-connect
+    spec:
+      containers:
+        - name: kafka-connect
+          image: d0rka/confluent-debezium-outbox-image:0.1.1
+          ports:
+            - containerPort: 8083
+          env:
+            - name: CONNECT_BOOTSTRAP_SERVERS
+              value: "primary-kafka:9071"
+            - name: CONNECT_REST_PORT
+              value: "8083"
+            - name: CONNECT_REST_ADVERTISED_HOST_NAME
+              value: "0.0.0.0"
+            - name: CONNECT_GROUP_ID
+              value: "kafka-connect"
+            - name: CONNECT_CONFIG_STORAGE_TOPIC
+              value: "connect-configs"
+            - name: CONNECT_OFFSET_STORAGE_TOPIC
+              value: "connect-offsets"
+            - name: CONNECT_STATUS_STORAGE_TOPIC
+              value: "connect-status"
+            - name: CONNECT_KEY_CONVERTER
+              value: "org.apache.kafka.connect.json.JsonConverter"
+            - name: CONNECT_VALUE_CONVERTER
+              value: "org.apache.kafka.connect.json.JsonConverter"
+            - name: CONNECT_KEY_CONVERTER_SCHEMAS_ENABLE
+              value: "false"
+            - name: CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE
+              value: "false"
+            - name: CONNECT_PLUGIN_PATH
+              value: "/usr/share/java,/usr/share/confluent-hub-components,/kafka/connect,/kafka/libs"
+            - name: CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR
+              value: "1"
+            - name: CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR
+              value: "1"
+            - name: CONNECT_STATUS_STORAGE_REPLICATION_FACTOR
+              value: "1"
