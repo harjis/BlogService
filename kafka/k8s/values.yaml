@@ -74,9 +74,9 @@ spec:
             - name: CONNECT_STATUS_STORAGE_TOPIC
               value: "connect-status"
             - name: CONNECT_KEY_CONVERTER
-              value: "org.apache.kafka.connect.json.JsonConverter"
+              value: "org.apache.kafka.connect.storage.StringConverter"
             - name: CONNECT_VALUE_CONVERTER
-              value: "org.apache.kafka.connect.json.JsonConverter"
+              value: "org.apache.kafka.connect.storage.StringConverter"
             - name: CONNECT_KEY_CONVERTER_SCHEMAS_ENABLE
               value: "false"
             - name: CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE
