@@ -32,7 +32,7 @@ namespace CommentService.Integration
                 // Do not commit offsets.
                 EnableAutoCommit = false
             };
-            _topic = "Post.events";
+            _topic = "outbox";
             _kafkaConsumer = new ConsumerBuilder<string, string>(consumerConfig).Build();
         }
 

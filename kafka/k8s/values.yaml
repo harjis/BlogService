@@ -27,56 +27,17 @@ spec:
     enabled: true
 ---
 apiVersion: platform.confluent.io/v1beta1
-kind: SchemaRegistry
+kind: KafkaTopic
 metadata:
-  name: primary-schema-registry
+  name: "outbox"
   namespace: primary-kafka
 spec:
   replicas: 1
-  image:
-    application: confluentinc/cp-schema-registry:7.4.0
-    init: confluentinc/confluent-init-container:2.6.0
-  configOverrides:
-    server:
-      - kafkastore.topic=_schemas
-  dependencies:
-    kafka:
-      bootstrapEndpoint: primary-kafka:9071
+  partitionCount: 1
+  kafkaClusterRef:
+    name: primary-kafka
+    namespace: primary-kafka
 ---
-apiVersion: platform.confluent.io/v1beta1
-kind: ControlCenter
-metadata:
-  name: controlcenter
-  namespace: primary-kafka
-spec:
-  replicas: 1
-  image:
-    application: confluentinc/cp-enterprise-control-center:7.4.0
-    init: confluentinc/confluent-init-container:2.6.0
-  dependencies:
-    kafka:
-      bootstrapEndpoint: primary-kafka:9071
-    schemaRegistry:
-      url: http://primary-schema-registry.primary-kafka.svc.cluster.local:8081
-  dataVolumeCapacity: 1Gi
-  podTemplate:
-    probe:
-      liveness:
-        timeoutSeconds: 6000
-        failureThreshold: 100
-  configOverrides:
-    server:
-      - confluent.controlcenter.command.topic.replication=1
-      - confluent.controlcenter.internal.topics.replication=1
-      - confluent.metrics.topic.replication=1
-      - confluent.monitoring.interceptor.topic.replication=1
-      - confluent.controlcenter.schema.registry.url=http://primary-schema-registry.primary-kafka.svc.cluster.local:8081
-
----
-
-
-
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -94,7 +55,7 @@ spec:
     spec:
       containers:
         - name: kafka-connect
-          image: d0rka/confluent-debezium-outbox-image:0.1.1
+          image: d0rka/confluent-debezium-outbox-image:0.1.2
           ports:
             - containerPort: 8083
           env:

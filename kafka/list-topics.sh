@@ -1,4 +1,4 @@
 #!/bin/bash
 
-kubectl exec -it blog-service-kafka-cp-zookeeper-0 -- \
-kafka-topics --zookeeper blog-service-kafka-cp-zookeeper-headless:2181 --list
+kubectl exec -it zookeeper-0 -- \
+kafka-topics --zookeeper primary-kafka.primary-kafka.svc.cluster.local:2181 --list
