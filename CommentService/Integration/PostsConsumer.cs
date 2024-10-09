@@ -25,7 +25,7 @@ namespace CommentService.Integration
             
             var consumerConfig = new ConsumerConfig
             {
-                BootstrapServers = "blog-service-kafka-cp-kafka-headless:9092",
+                BootstrapServers = "primary-kafka.primary-kafka.svc.cluster.local:9071",
                 GroupId = "CommentService",
                 // The offset to start reading from if there are no committed offsets (or there was an error in retrieving offsets).
                 AutoOffsetReset = AutoOffsetReset.Earliest,

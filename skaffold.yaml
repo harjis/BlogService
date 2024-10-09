@@ -6,13 +6,13 @@ build:
       context: PostService
       buildpacks:
         trustBuilder: true
-        builder: "paketobuildpacks/builder:base"
+        builder: "paketobuildpacks/builder-jammy-base"
       sync:
         auto: true
     - image: d0rka/comment-service
       context: CommentService
       buildpacks:
         trustBuilder: true
-        builder: "paketobuildpacks/builder:base"
+        builder: "paketobuildpacks/builder-jammy-base"
       sync:
         auto: true
