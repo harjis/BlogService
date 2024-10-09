@@ -81,7 +81,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: kafka-connect
-  namespace: primary-kafka
+  namespace: default
 spec:
   replicas: 1
   selector:
@@ -99,11 +99,11 @@ spec:
             - containerPort: 8083
           env:
             - name: CONNECT_BOOTSTRAP_SERVERS
-              value: "primary-kafka:9071"
+              value: "primary-kafka.primary-kafka.svc.cluster.local:9071"
             - name: CONNECT_REST_PORT
               value: "8083"
             - name: CONNECT_REST_ADVERTISED_HOST_NAME
-              value: "0.0.0.0"
+              value: "localhost"
             - name: CONNECT_GROUP_ID
               value: "kafka-connect"
             - name: CONNECT_CONFIG_STORAGE_TOPIC
@@ -128,3 +128,15 @@ spec:
               value: "1"
             - name: CONNECT_STATUS_STORAGE_REPLICATION_FACTOR
               value: "1"
+            - name: DB_HOST
+              value: postgres-cis
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_USERNAME
+              value: postgres
+            - name: DB_PASSWORD
+              value: my_pgpassword
+            - name: DB_NAME
+              value: posts-db
+            - name: DB_SERVERNAME
+              value: posts
